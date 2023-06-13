@@ -2,6 +2,21 @@ import time
 import pygame
 
 
+class ApplesoftEnvironment:
+    def __init__(self):
+        self.txtX = 1
+        self.txtY = 1
+        self.txtMinX = 1
+        self.txtMinY = 1
+        self.txtMaxX = 40
+        self.txtMaxY = 24
+        self.txtForeColour = "white"
+        self.txtBackColour = "black"
+
+        self.hgrColour = "black"
+        self.hgrLastPoint = (0, 0)
+
+
 def render():
     pygame.transform.scale(gAppleDisplaySurface, gMainDisplaySize, gMainDisplaySurface)
     pygame.display.update()
@@ -76,13 +91,13 @@ def home():
 
 
 def inverse():
-    global gInverseText
-    gInverseText = True
+    env.txtForeColour = "black"
+    env.txtBackColour = "white"
 
 
 def normal():
-    global gInverseText
-    gInverseText = False
+    env.txtForeColour = "white"
+    env.txtBackColour = "black"
 
 
 def hgr():
@@ -123,16 +138,7 @@ def scroll():
 
 
 def drawText(x, y, text):
-    global gInverseText
-
-    if gInverseText:
-        foreColour = [0, 0, 0]
-        backColour = [255, 255, 255]
-    else:
-        foreColour = [255, 255, 255]
-        backColour = [0, 0, 0]
-
-    image = gMainFont.render(text, True, foreColour, backColour)
+    image = gMainFont.render(text, True, env.txtForeColour, env.txtBackColour)
     rect = image.get_rect()
     rect.topleft = [(x - 1) * 7, (y - 1) * 8]
     gAppleDisplaySurface.blit(image, rect)
@@ -230,6 +236,8 @@ def getKeypress():
 
  
 gCursor = { "x": 1, "y": 1, "minX": 1, "minY": 1, "maxX": 40, "maxY": 24 }
+env = ApplesoftEnvironment()
+
 gMainDisplaySize = (560, 384)
   
 # create the display surface object of specific dimension..e(X, Y).
@@ -237,4 +245,3 @@ pygame.init()
 gAppleDisplaySurface = pygame.Surface((280,192))
 gMainDisplaySurface = pygame.display.set_mode(gMainDisplaySize)
 gMainFont = pygame.font.Font('PrintChar21.ttf', 8)
-gInverseText = False
