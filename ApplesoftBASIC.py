@@ -75,6 +75,15 @@ def setTextWindowRight(x):
     if gCursor["x"] > x:
         gCursor["x"] = 1
 
+def text():
+    global gCursor
+
+    gCursor["minX"] = 1
+    gCursor["minY"] = 1
+    gCursor["maxX"] = 40
+    gCursor["maxY"] = 24
+
+
 def home():
     global gCursor
 
@@ -167,13 +176,18 @@ def print(text, newLine = True):
 
     if newLine:
         gCursor["x"] = gCursor["minX"]
-        if y < gCursor["maxY"]:
-            gCursor["y"] = y + 1
-        else:
+        y = y + 1
+        if y > gCursor["maxY"]:
             scroll()
-            gCursor["y"] = gCursor["maxY"]
     else:
         gCursor["x"] = x + len(text)
+
+    # handle weirdness where vtab is out of current text window
+    if y > gCursor["maxY"]:
+        y = gCursor["maxY"]
+    elif y < gCursor["minY"]:
+        y = gCursor["minY"]
+    gCursor["y"] = y
 
 
 def input(promptText):
