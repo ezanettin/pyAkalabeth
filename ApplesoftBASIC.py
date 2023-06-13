@@ -108,6 +108,20 @@ def hgr():
     gCursor["minY"] = 21; gCursor["maxY"] = 24
 
 
+def hcolor(colour):
+    colours = { 0: "black", 1: "green", 2: "violet", 3: "white", 4: "black", 5: "orange", 6: "blue", 7: "white" }
+    env.hgrColour = colours[colour]
+
+
+def hplot(points):
+    pygame.draw.lines(gAppleDisplaySurface, env.hgrColour, False, points)
+    env.hgrLastPoint = points[-1]
+
+
+def hplotTo(points):
+    hplot(env.hgrLastPoint + points)
+
+
 def clearLineEnd():
     global gCursor
 
