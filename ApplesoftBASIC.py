@@ -32,71 +32,61 @@ def sgn(num):
 
 
 def htab(x):
-    global gCursor
-
     if x < 1:
         x = 1
     elif x > 40:
         x = 40
-    gCursor["x"] = x
+    env.x = x
 
 
 def vtab(y):
-    global gCursor
-
     if y < 1:
         y = 1
     elif y > 40:
         y = 24
-    gCursor["y"] = y
+    env.y = y
 
 
 def setTextWindowTop(y):
     global gCursor
 
     y = y + 1           # user specifies line before they line the want in the window (ie, default if 0)
-    gCursor["minY"] = y
-    if gCursor["y"] < y:
-        gCursor["y"] = y
+    env.minY = y
+    if env.y < y:
+        env.y = y
 
 
 def setTextWindowBottom(y):
     global gCursor
 
-    gCursor["maxY"] = y
-    if gCursor["y"] > y:
-        gCursor["y"] = y + 1     # ready to scroll
+    env.maxY = y
+    if env.y > y:
+        env.y = y + 1     # ready to scroll
 
 
 def setTextWindowRight(x):
-    global gCursor
-
-    gCursor["maxX"] = x
-    if gCursor["x"] > x:
-        gCursor["x"] = 1
+    env.maxX = x
+    if env.x > x:
+        env.x = 1
 
 def text():
-    global gCursor
-
-    gCursor["minX"] = 1
-    gCursor["minY"] = 1
-    gCursor["maxX"] = 40
-    gCursor["maxY"] = 24
+    env.minX = 1
+    env.minY = 1
+    env.maxX = 40
+    env.maxY = 24
 
 
 def home():
-    global gCursor
-
-    x = (gCursor["minX"] - 1) * 7
-    width = (gCursor["maxX"] - gCursor["minX"] + 1) * 7
-    y = (gCursor["minY"] - 1) * 8
-    height = (gCursor["maxY"] - gCursor["minY"] + 1) * 8
+    x = (env.minX - 1) * 7
+    width = (env.maxX - env.minX + 1) * 7
+    y = (env.minY - 1) * 8
+    height = (env.maxY - env.minY + 1) * 8
 
     rect = pygame.Rect(x, y, width, height)
     pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], rect)
 
-    gCursor["x"] = gCursor["minX"]
-    gCursor["y"] = gCursor["minY"]
+    env.x = env.minX
+    env.y = env.minY
 
 
 def inverse():
@@ -110,11 +100,9 @@ def normal():
 
 
 def hgr():
-    global gCursor
-
     rect = pygame.Rect(0, 0, 280, 160)
     pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], rect)
-    gCursor["minY"] = 21; gCursor["maxY"] = 24
+    env.minY = 21; env.maxY = 24
 
 
 def hcolor(colour):
@@ -128,33 +116,29 @@ def hplot(points):
 
 
 def hplotTo(points):
-    hplot(env.hgrLastPoint + points)
+    hplot([env.hgrLastPoint] + points)
 
 
 def clearLineEnd():
-    global gCursor
-
-    x = (gCursor["x"] - 1) * 7
-    width = (gCursor["maxX"] - gCursor["x"] + 1) * 7
-    y = (gCursor["y"] - 1) * 8
+    x = (env.x - 1) * 7
+    width = (env.maxX - env.x + 1) * 7
+    y = (env.y - 1) * 8
     height = 8
     rect = pygame.Rect(x, y, width, height)
     pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], rect)
 
 
 def scroll():
-    global gCursor
-
-    x = (gCursor["minX"] - 1) * 7
-    width = (gCursor["maxX"] - gCursor["minX"] + 1) * 7
-    y = (gCursor["minY"] - 1) * 8
-    height = (gCursor["maxY"] - gCursor["minY"] + 1) * 8
+    x = (env.minX - 1) * 7
+    width = (env.maxX - env.minX + 1) * 7
+    y = (env.minY - 1) * 8
+    height = (env.maxY - env.minY + 1) * 8
 
     clipRect = pygame.Rect(x, y, width, height)
     gAppleDisplaySurface.set_clip(clipRect)
     gAppleDisplaySurface.scroll(0, -8)
 
-    blankRect = pygame.Rect(x, (gCursor["maxY"] - 1) * 8, width, 8)
+    blankRect = pygame.Rect(x, (env.maxY - 1) * 8, width, 8)
     pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], blankRect)
 
     gAppleDisplaySurface.set_clip(gAppleDisplaySurface.get_rect())
@@ -168,30 +152,24 @@ def drawText(x, y, text):
 
 
 def print(text, newLine = True):
-    global gCursor
-
-    x = gCursor["x"]
-    y = gCursor["y"]
-    drawText(x, y, text)
+    drawText(env.x, env.y, text)
 
     if newLine:
-        gCursor["x"] = gCursor["minX"]
-        y = y + 1
-        if y > gCursor["maxY"]:
+        env.x = env.minX
+        env.y = env.y + 1
+        if env.y > env.maxY:
             scroll()
     else:
-        gCursor["x"] = x + len(text)
+        env.x = env.x + len(text)
 
     # handle weirdness where vtab is out of current text window
-    if y > gCursor["maxY"]:
-        y = gCursor["maxY"]
-    elif y < gCursor["minY"]:
-        y = gCursor["minY"]
-    gCursor["y"] = y
+    if env.y > env.maxY:
+        env.y = env.maxY
+    elif env.y < env.minY:
+        env.y = env.minY
 
 
 def input(promptText):
-    global gCursor
     text = ""
     clock = pygame.time.Clock()
     dt = 0
@@ -199,8 +177,6 @@ def input(promptText):
 
     print(promptText, False)
     clearLineEnd()
-    x = gCursor["x"]
-    y = gCursor["y"]
 
     while not done:
         for event in pygame.event.get():
@@ -215,12 +191,12 @@ def input(promptText):
                 else:
                     text += event.unicode
 
-        drawText(x, y, f"{text} ")
+        drawText(env.x, env.y, f"{text} ")
         render()
         dt = clock.tick(30) / 1000
 
-    gCursor["x"] = 1
-    gCursor["y"] = gCursor["y"] + 1
+    env.x = 1
+    env.y = env.y + 1
 
     return text
 
