@@ -2,7 +2,7 @@ import time
 import pygame
 
 
-class ApplesoftEnvironment:
+class ApplesoftState:
     def __init__(self):
         self.txtX = 1
         self.txtY = 1
@@ -236,7 +236,7 @@ def getKeypress():
 
  
 gCursor = { "x": 1, "y": 1, "minX": 1, "minY": 1, "maxX": 40, "maxY": 24 }
-env = ApplesoftEnvironment()
+env = ApplesoftState()
 
 gMainDisplaySize = (560, 384)
   
@@ -245,3 +245,4 @@ pygame.init()
 gAppleDisplaySurface = pygame.Surface((280,192))
 gMainDisplaySurface = pygame.display.set_mode(gMainDisplaySize)
 gMainFont = pygame.font.Font('PrintChar21.ttf', 8)
+
