@@ -151,15 +151,16 @@ def drawText(x, y, text):
     gAppleDisplaySurface.blit(image, rect)
 
 
-def print(text, newLine = True):
-    drawText(env.x, env.y, text)
+def print(text = None, newLine = True):
+    if not text is None:
+        drawText(env.x, env.y, text)
 
     if newLine:
         env.x = env.minX
         env.y = env.y + 1
         if env.y > env.maxY:
             scroll()
-    else:
+    elif not text is None:
         env.x = env.x + len(text)
 
     # handle weirdness where vtab is out of current text window
@@ -172,7 +173,6 @@ def print(text, newLine = True):
 def input(promptText):
     text = ""
     clock = pygame.time.Clock()
-    dt = 0
     done = False
 
     print(promptText, False)
@@ -193,7 +193,7 @@ def input(promptText):
 
         drawText(env.x, env.y, f"{text} ")
         render()
-        dt = clock.tick(30) / 1000
+        clock.tick(30)
 
     env.x = 1
     env.y = env.y + 1
@@ -203,7 +203,6 @@ def input(promptText):
 
 def get():
     clock = pygame.time.Clock()
-    dt = 0
 
     render()        
 
@@ -216,12 +215,11 @@ def get():
                 if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_RCTRL, pygame.K_LCTRL, pygame.K_RALT, pygame.K_LALT, pygame.K_RSUPER, pygame.K_LSUPER]:
                     return event.unicode
 
-        dt = clock.tick(30) / 1000
+        clock.tick(30)
 
 
 def getKeypress():
     clock = pygame.time.Clock()
-    dt = 0
 
     render()        
 
@@ -232,17 +230,29 @@ def getKeypress():
                 quit()
             elif event.type == pygame.KEYDOWN:
                 if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_RCTRL, pygame.K_LCTRL, pygame.K_RALT, pygame.K_LALT, pygame.K_RSUPER, pygame.K_LSUPER]:
-                    return event.key
+                    if event.key in gKeyCodes:
+                        return gKeyCodes[event.key]
+                    else:
+                        return event.key
 
-        dt = clock.tick(30) / 1000
+        clock.tick(30)
 
 
 
  
-gCursor = { "x": 1, "y": 1, "minX": 1, "minY": 1, "maxX": 40, "maxY": 24 }
 env = ApplesoftState()
-
 gMainDisplaySize = (560, 384)
+gKeyCodes = { pygame.K_LEFT: 136,
+              pygame.K_RETURN: 141,
+              pygame.K_RIGHT: 149,
+              pygame.K_ESCAPE: 155,
+              pygame.K_SPACE: 160,
+              pygame.K_SLASH: 175,
+              pygame.K_a: 193,
+              pygame.K_p: 208,
+              pygame.K_s: 211,
+              pygame.K_x: 216,
+            }
   
 # create the display surface object of specific dimension..e(X, Y).
 pygame.init()
