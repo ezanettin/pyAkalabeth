@@ -963,7 +963,7 @@ def monsters(surface):
         if MZ[MM][0] == 0:
             continue
 #  4010 RA =  SQR ((PX - ML%(MM,0)) ^ 2 + (PY - ML%(MM,1)) ^ 2)
-        RA = math.sqrt((PX - ML[MM][0] ** 2 + (PY - ML[MM][1])) ** 2)
+        RA =  math.sqrt((PX - ML[MM][0]) ** 2 + (PY - ML[MM][1]) ** 2)
 #  4011  IF MZ%(MM,1) < IN * LP THEN 4030
 #  4020  IF RA < 1.3 THEN 4500
 #  4025  IF MM = 8 AND RA < 3 THEN 4999
