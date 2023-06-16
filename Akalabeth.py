@@ -4,7 +4,7 @@ import math
 import ApplesoftBASIC as apple
 
 
-def drawMap(surface):
+def drawMap():
     global TX
     global TY
 
@@ -46,7 +46,7 @@ def drawMap(surface):
 #  190  NEXT : NEXT : RETURN 
 
 
-def drawDungeon(surface):
+def drawDungeon():
 #  200  HGR :DIS = 0: HCOLOR= 3
     apple.hgr(); apple.hcolor(3)
     DIS = 0
@@ -476,7 +476,7 @@ def generateDungeon():
 #  590  RETURN 
 
 
-def mainLoop(surface):
+def mainLoop():
     global INOUT
     global TX; global TY
     global DX; global DY
@@ -609,7 +609,7 @@ def mainLoop(surface):
                     generateDungeon()
                     DX = 1; DY = 0; PX = 1; PY = 1
                 elif TE[TX][TY] == 5:
-                    castle(surface)
+                    castle()
                 else:
                     apple.print("HUH?")
                     continue
@@ -640,7 +640,7 @@ def mainLoop(surface):
 #  1600  GOTO 1090
         elif X == 193 or X == 155:
             if sgnInout == 2:
-                playerAttack(surface)
+                playerAttack()
 #  1081  IF X = 160 THEN  PRINT "PASS": GOTO 1090
         elif X == 160:
             apple.print("PASS")
@@ -683,9 +683,9 @@ def mainLoop(surface):
 # 1093  IF C(0) <  = 0 THEN 6000
 #  1095  IF IN > 0 THEN  GOSUB 4000: IF C(0) <  = 0 THEN 1093
         if INOUT > 0 and C[0] > 0:
-            monsters(surface)
+            monsters()
         if C[0] <= 0:
-            youHaveDied(surface)
+            youHaveDied()
             restartGame()
 #  1096  POKE 33,40: VTAB (22): HTAB (30): PRINT "FOOD=";PW(0);: CALL  - 868: VTAB (23): HTAB (30): PRINT "H.P.=";C(0);: CALL  - 868: VTAB (24): HTAB (30): PRINT "GOLD=";C(5);: CALL  - 868: POKE 33,29: HTAB (1)
         apple.setTextWindowRight(40)
@@ -695,14 +695,14 @@ def mainLoop(surface):
         apple.setTextWindowRight(29)
 #  1097  IF INOUT = 0 THEN  GOSUB 100: GOTO 1000
         if INOUT == 0:
-            drawMap(surface)
+            drawMap()
 #  1098  IF INOUT > 0 THEN  GOSUB 200: GOTO 1000
         elif INOUT > 0:
-            drawDungeon(surface)
+            drawDungeon()
 #  1600  GOTO 1090
 
 
-def playerAttack(surface):
+def playerAttack():
     global LK
     global PW
     global PTs
@@ -916,7 +916,7 @@ def monsterSetup():
 #  2090  NEXT : RETURN 
 
 
-def monsterAttack(surface, MM):
+def monsterAttack(MM):
 #  4500  IF MM = 2 OR MM = 7 THEN 4600
 #  4509  PRINT "YOU ARE BEING ATTACKED": PRINT "BY A ";M$(MM)
 #  4510  IF  RND (1) * 20 -  SGN (PW(3)) - C(3) + MM + IN < 0 THEN  PRINT "MISSED": GOTO 4525
@@ -951,7 +951,7 @@ def monsterAttack(surface, MM):
         apple.input("-CR- TO CONT. ")
 
 
-def monsters(surface):
+def monsters():
     global MZ; global ML
     global PX; global PY
     global DNG
@@ -969,7 +969,7 @@ def monsters(surface):
 #  4025  IF MM = 8 AND RA < 3 THEN 4999
         if MZ[MM][1] >= INOUT * LP:
             if RA < 1.3:
-                monsterAttack(surface, MM)
+                monsterAttack(MM)
                 continue
             if MM == 8 and RA < 3:
                 continue
@@ -1012,14 +1012,14 @@ def monsters(surface):
             continue
 #  4082  IF MZ%(MM,1) < IN * LP AND RA < 1.3 THEN 4500
         if MZ[MM][1] < INOUT * LP and RA < 1.3:
-            monsterAttack(surface, MM)
+            monsterAttack(MM)
 #  4083  IF MZ%(MM,1) < IN * LP THEN MZ%(MM,1) = MZ%(MM,1) + MM + IN
         if MZ[MM][1] < INOUT * LP:
             MZ[MM][1] = MZ[MM][1] + MM + INOUT
 #  4499  GOTO 4999
 #  4999  NEXT : RETURN 
 
-def youHaveDied(surface):
+def youHaveDied():
     global PNs
 
     scrollInfo = { "firstLine" : 21, "lastLine": 24, "currentLine": 24 }
@@ -1046,7 +1046,7 @@ def youHaveDied(surface):
 #  6060  GOTO 6050
 
 
-def goQuest(surface, y):
+def goQuest():
     #  7060  PRINT : PRINT "     GO NOW UPON THIS QUEST, AND MAY": PRINT "LADY LUCK BE FAIR UNTO YOU.....": PRINT ".....ALSO I, BRITISH, HAVE INCREASED": PRINT "EACH OF THY ATTRIBUTES BY ONE!"
     apple.print("     GO NOW UPON THIS QUEST, AND MAY")
     apple.print("LADY LUCK BE FAIR UNTO YOU.....")
@@ -1062,7 +1062,7 @@ def goQuest(surface, y):
     return
 
 
-def castle(surface):
+def castle():
     global PNs
     global TASK
     global LP
@@ -1105,7 +1105,7 @@ def castle(surface):
 
 #  7060  PRINT : PRINT "     GO NOW UPON THIS QUEST, AND MAY": PRINT "LADY LUCK BE FAIR UNTO YOU.....": PRINT ".....ALSO I, BRITISH, HAVE INCREASED": PRINT "EACH OF THY ATTRIBUTES BY ONE!"
 #  7070  PRINT : PRINT "         PRESS -SPACE- TO CONT.";: GET Q$: FOR X = 0 TO 5:C(X) = C(X) + 1: NEXT : HOME : GOTO 1090
-        goQuest(surface, 19)
+        goQuest()
         return
 
 #  7500  IF TASK > 0 THEN  PRINT : PRINT : PRINT PN$;" WHY HAST THOU RETURNED?": PRINT "THOU MUST KILL A(N) ";M$(TASK): PRINT "GO NOW AND COMPLETE THY QUEST!": PRINT : PRINT "         PRESS -SPACE- TO CONT.";: GET Q$: HOME : GOTO 1090
@@ -1130,7 +1130,7 @@ def castle(surface):
         apple.print(f"NOW THOU MUST KILL A(N) {Ms[TASK]}")
 
 #  7530  GOTO 7060
-        goQuest(surface, 11)
+        goQuest()
 
 #  7900  TEXT : HOME : PRINT : PRINT : PRINT :PN$ = "LORD " + PN$: PRINT "     ";PN$;","
     else:
@@ -1501,8 +1501,8 @@ if __name__ == '__main__':
     apple.setTextWindowTop(20); apple.setTextWindowRight(29)
 
     #  70  GOSUB 100: GOTO 1000
-    drawMap(apple.gAppleDisplaySurface)
-    mainLoop(apple.gAppleDisplaySurface)
+    drawMap()
+    mainLoop()
 
     #  90  FOR X = 0 TO 9: FOR Y = 0 TO 5: PRINT LD%(X,Y);" ";: NEXT : PRINT : NEXT : GET Q$
     # This looks like dead code
