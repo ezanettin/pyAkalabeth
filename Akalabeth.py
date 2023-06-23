@@ -404,6 +404,7 @@ def generateDungeon():
     global LN
     global TX; global TY
     global INOUT
+    global DNG
 
 #  500 ZZ =  RND ( -  ABS (LN) - TX * 10 - TY * 1000 + INOUT * 31.4)
     ZZ = random.seed(abs(LN) - TX * 10 - TY * 1000 + INOUT * 31.4)
@@ -703,7 +704,7 @@ def mainLoop():
 
 
 def playerAttack():
-    global LK
+    global LK; global TASK
     global PW
     global PTs
     global C
@@ -902,8 +903,11 @@ def monsterSetup():
 #  2040  IF ML%(X,0) = PX AND ML%(X,1) = PY THEN 2020
         while True:
             ML[X][0] = int(random.random() * 9 + 1); ML[X][1] = int(random.random() * 9 + 1)
-            if not (DNG[ML[X][0]][ML[X][1]] != 0) or not (ML[X][0] == PX and ML[X][1] == PY):
-                break
+            if DNG[ML[X][0]][ML[X][1]] != 0:
+                continue
+            if ML[X][0] == PX and ML[X][1] == PY:
+                continue
+            break
 
 #  2050 DNG%(ML%(X,0),ML%(X,1)) = X * 10
         DNG[ML[X][0]][ML[X][1]] = X * 10
@@ -934,7 +938,7 @@ def monsterAttack(MM):
         else:
             while True:
                 ZZ = int(random.random() * 6)
-                if not (PW[ZZ] < 1):
+                if PW[ZZ] >= 1:
                     break
             apple.print(f"A THIEF STOLE A {Ws[ZZ]}")
             PW[ZZ] = PW[ZZ] - 1
@@ -1048,6 +1052,7 @@ def youHaveDied():
 
 def goQuest():
     #  7060  PRINT : PRINT "     GO NOW UPON THIS QUEST, AND MAY": PRINT "LADY LUCK BE FAIR UNTO YOU.....": PRINT ".....ALSO I, BRITISH, HAVE INCREASED": PRINT "EACH OF THY ATTRIBUTES BY ONE!"
+    apple.print()
     apple.print("     GO NOW UPON THIS QUEST, AND MAY")
     apple.print("LADY LUCK BE FAIR UNTO YOU.....")
     apple.print(".....ALSO I, BRITISH, HAVE INCREASED")
@@ -1075,6 +1080,7 @@ def castle():
 #  7010  IF PN$ <  > "" THEN 7500
     if PNs == "":
 #  7020  PRINT : PRINT : PRINT "     WELCOME PEASANT INTO THE HALLS OF": PRINT "THE MIGHTY LORD BRITISH. HEREIN THOU MAYCHOOSE TO DARE BATTLE WITH THE EVIL": PRINT "CREATURES OF THE DEPTHS, FOR GREAT": PRINT "REWARD!"
+        apple.print(); apple.print()
         apple.print("     WELCOME PEASANT INTO THE HALLS OF")
         apple.print("THE MIGHTY LORD BRITISH. HEREIN THOU MAY")
         apple.print("CHOOSE TO DARE BATTLE WITH THE EVIL")
@@ -1082,21 +1088,26 @@ def castle():
         apple.print("REWARD!")
 
 #  7030  PRINT : PRINT "WHAT IS THY NAME PEASANT ";: INPUT PN$
+        apple.print()
         PNs = apple.input("WHAT IS THY NAME PEASANT ")
 #  7040  PRINT "DOEST THOU WISH FOR GRAND ADVENTURE ? ";: GET Q$: IF Q$ <  > "Y" THEN  PRINT : PRINT "THEN LEAVE AND BEGONE!":PN$ = "": PRINT : PRINT "         PRESS -SPACE- TO CONT.";: GET Q$: GOTO 1090
-        apple.print("DOEST THOU WISH FOR GRAND ADVENTURE ? ")
+        apple.print("DOEST THOU WISH FOR GRAND ADVENTURE ? ", False)
         Qs = str.upper(apple.get())
         if Qs != "Y":
+            apple.print()
             apple.print("THEN LEAVE AND BEGONE!")
             PNs = ""
+            apple.print()
             apple.print("         PRESS -SPACE- TO CONT.", False)
             apple.get()
             return
 
 #  7045  PRINT 
 #  7050  PRINT : PRINT "GOOD! THOU SHALT TRY TO BECOME A ": PRINT "KNIGHT!!!": PRINT : PRINT "THY FIRST TASK IS TO GO INTO THE": PRINT "DUNGEONS AND TO RETURN ONLY AFTER": PRINT "KILLING A(N) ";:TASK =  INT (C(4) / 3): PRINT M$(TASK)
+        apple.print(); apple.print()
         apple.print("GOOD! THOU SHALT TRY TO BECOME A ")
         apple.print("KNIGHT!!!")
+        apple.print()
         apple.print("THY FIRST TASK IS TO GO INTO THE")
         apple.print("DUNGEONS AND TO RETURN ONLY AFTER")
         apple.print("KILLING A(N) ", False)
@@ -1110,15 +1121,18 @@ def castle():
 
 #  7500  IF TASK > 0 THEN  PRINT : PRINT : PRINT PN$;" WHY HAST THOU RETURNED?": PRINT "THOU MUST KILL A(N) ";M$(TASK): PRINT "GO NOW AND COMPLETE THY QUEST!": PRINT : PRINT "         PRESS -SPACE- TO CONT.";: GET Q$: HOME : GOTO 1090
     if TASK > 0:
+        apple.print(); apple.print()
         apple.print(f"{PNs} WHY HAST THOU RETURNED?")
         apple.print(f"THOU MUST KILL A(N) {Ms[TASK]}")
         apple.print("GO NOW AND COMPLETE THY QUEST!")
+        apple.print()
         apple.print("         PRESS -SPACE- TO CONT.", False)
         apple.get()
         apple.home()
         return
 
 #  7510  PRINT : PRINT : PRINT : PRINT "AAHH!!.....";PN$: PRINT : PRINT "THOU HAST ACOMPLISHED THY QUEST!": IF  ABS (TASK) = 10 THEN 7900
+    apple.print(); apple.print(); apple.print()
     apple.print(f"AAHH!!.....{PNs}")
     apple.print("THOU HAST ACOMPLISHED THY QUEST!")
     if (abs(TASK) != 10):
@@ -1127,6 +1141,7 @@ def castle():
         apple.print("UNFORTUNATELY, THIS IS NOT ENOUGH TO")
         apple.print("BECOME A KNIGHT.")
         TASK = abs(TASK) + 1
+        apple.print()
         apple.print(f"NOW THOU MUST KILL A(N) {Ms[TASK]}")
 
 #  7530  GOTO 7060
@@ -1134,7 +1149,7 @@ def castle():
 
 #  7900  TEXT : HOME : PRINT : PRINT : PRINT :PN$ = "LORD " + PN$: PRINT "     ";PN$;","
     else:
-        apple.home()
+        apple.home(); apple.print(); apple.print(); apple.print()
         PNs = "LORD " + PNs
         apple.print(f"     {PNs},")
 
@@ -1148,17 +1163,21 @@ def castle():
         if LP != 10:
 
 #  7930  PRINT : PRINT "   NOW MAYBE THOU ART FOOLHEARTY": PRINT "ENOUGH TO TRY DIFFICULTY LEVEL ";LP + 1
+            apple.print()
             apple.print("   NOW MAYBE THOU ART FOOLHEARTY")
             apple.print(f"ENOUGH TO TRY DIFFICULTY LEVEL {LP + 1}")
 #  7940  GOTO 7070
         else:
 
 #  7950  PRINT : PRINT "...CALL CALIFORNIA PACIFIC COMPUTER": PRINT "AT (415)-569-9126 TO REPORT THIS": PRINT "AMAZING FEAT!"
+            apple.print()
             apple.print("...CALL CALIFORNIA PACIFIC COMPUTER")
             apple.print("AT (415)-569-9126 TO REPORT THIS")
             apple.print("AMAZING FEAT!")
 
 #  7990  GOTO 7070
+#  7070  PRINT : PRINT "         PRESS -SPACE- TO CONT.";: GET Q$: FOR X = 0 TO 5:C(X) = C(X) + 1: NEXT : HOME : GOTO 1090
+            apple.print()
             apple.print("         PRESS -SPACE- TO CONT.")
             apple.get()
             for X in range(0, 6):
