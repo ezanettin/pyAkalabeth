@@ -871,9 +871,10 @@ def playerAttack():
             DNG[ML[MN][0]][ML[MN][1]] = DNG[ML[MN][0]][ML[MN][1]] - 10 * MN
             MZ[MN][0] = 0
 #  1667 LK = LK +  INT (MN * IN / 2): IF MN = TASK THEN TASK =  - TASK
+        # TODO: Looks like a bug as this triggers when you hit the monster, not when you kill it.
         LK = LK + int(MN * INOUT / 2)
         if MN == TASK:
-            TASK == -TASK
+            TASK = -TASK
 
 #  1668  IF PA = 1 THEN  PRINT "-CR- TO CONT. ";: INPUT Q$
     if PA == 1:
@@ -1026,7 +1027,6 @@ def monsters():
 def youHaveDied():
     global PNs
 
-    scrollInfo = { "firstLine" : 21, "lastLine": 24, "currentLine": 24 }
 #  6000  POKE 33,40: PRINT : PRINT : PRINT "        WE MOURN THE PASSING OF"
     apple.setTextWindowRight(40)
     apple.print(); apple.print(); apple.print("        WE MOURN THE PASSING OF")
@@ -1146,6 +1146,7 @@ def castle():
 
 #  7530  GOTO 7060
         goQuest()
+        return
 
 #  7900  TEXT : HOME : PRINT : PRINT : PRINT :PN$ = "LORD " + PN$: PRINT "     ";PN$;","
     else:
