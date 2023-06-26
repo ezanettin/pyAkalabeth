@@ -1134,9 +1134,9 @@ def castle():
 #  7510  PRINT : PRINT : PRINT : PRINT "AAHH!!.....";PN$: PRINT : PRINT "THOU HAST ACOMPLISHED THY QUEST!": IF  ABS (TASK) = 10 THEN 7900
     apple.print(); apple.print(); apple.print()
     apple.print(f"AAHH!!.....{PNs}")
+    apple.print()
     apple.print("THOU HAST ACOMPLISHED THY QUEST!")
     if (abs(TASK) != 10):
-
 #  7520  PRINT "UNFORTUNATELY, THIS IS NOT ENOUGH TO": PRINT "BECOME A KNIGHT.":TASK =  ABS (TASK) + 1: PRINT : PRINT "NOW THOU MUST KILL A(N) ";M$(TASK)
         apple.print("UNFORTUNATELY, THIS IS NOT ENOUGH TO")
         apple.print("BECOME A KNIGHT.")
@@ -1147,13 +1147,11 @@ def castle():
 #  7530  GOTO 7060
         goQuest()
         return
-
 #  7900  TEXT : HOME : PRINT : PRINT : PRINT :PN$ = "LORD " + PN$: PRINT "     ";PN$;","
     else:
         apple.home(); apple.print(); apple.print(); apple.print()
         PNs = "LORD " + PNs
         apple.print(f"     {PNs},")
-
 #  7910  PRINT "       THOU HAST PROVED THYSELF WORTHY": PRINT "OF KNIGHTHOOD, CONTINUE PLAY IF THOU": PRINT "DOTH WISH, BUT THOU HAST ACOMPLISHED": PRINT "THE MAIN OBJECTIVE OF THIS GAME..."
         apple.print("       THOU HAST PROVED THYSELF WORTHY")
         apple.print("OF KNIGHTHOOD, CONTINUE PLAY IF THOU")
@@ -1162,29 +1160,27 @@ def castle():
 
 #  7920  IF LP = 10 THEN 7950
         if LP != 10:
-
 #  7930  PRINT : PRINT "   NOW MAYBE THOU ART FOOLHEARTY": PRINT "ENOUGH TO TRY DIFFICULTY LEVEL ";LP + 1
             apple.print()
             apple.print("   NOW MAYBE THOU ART FOOLHEARTY")
             apple.print(f"ENOUGH TO TRY DIFFICULTY LEVEL {LP + 1}")
 #  7940  GOTO 7070
         else:
-
 #  7950  PRINT : PRINT "...CALL CALIFORNIA PACIFIC COMPUTER": PRINT "AT (415)-569-9126 TO REPORT THIS": PRINT "AMAZING FEAT!"
             apple.print()
             apple.print("...CALL CALIFORNIA PACIFIC COMPUTER")
             apple.print("AT (415)-569-9126 TO REPORT THIS")
             apple.print("AMAZING FEAT!")
-
 #  7990  GOTO 7070
+
 #  7070  PRINT : PRINT "         PRESS -SPACE- TO CONT.";: GET Q$: FOR X = 0 TO 5:C(X) = C(X) + 1: NEXT : HOME : GOTO 1090
-            apple.print()
-            apple.print("         PRESS -SPACE- TO CONT.")
-            apple.get()
-            for X in range(0, 6):
-                C[X] += 1
-            apple.home()
-            return
+        apple.print()
+        apple.print("         PRESS -SPACE- TO CONT.")
+        apple.get()
+        for X in range(0, 6):
+            C[X] += 1
+        apple.home()
+        return
 
 
 def init():
