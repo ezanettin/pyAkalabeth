@@ -1,3 +1,4 @@
+import time
 import pygame
 
 
@@ -14,6 +15,8 @@ class ApplesoftState:
 
         self.hgrColour = "black"
         self.hgrLastPoint = (0, 0)
+
+        self.beepSound = pygame.mixer.Sound("Apple2Beep.wav")
 
 
 def render():
@@ -237,8 +240,19 @@ def getKeypress():
         clock.tick(30)
 
 
+def beep(count = 1):
+    while count > 0:
+        env.beepSound.play()
+        count = count - 1
+        time.sleep(0.1)
 
- 
+
+
+
+
+pygame.init()
+pygame.mixer.init()
+
 env = ApplesoftState()
 gMainDisplaySize = (560, 384)
 gKeyCodes = { pygame.K_LEFT: 136,
@@ -254,7 +268,6 @@ gKeyCodes = { pygame.K_LEFT: 136,
             }
   
 # create the display surface object of specific dimension..e(X, Y).
-pygame.init()
 gAppleDisplaySurface = pygame.Surface((280,192))
 gMainDisplaySurface = pygame.display.set_mode(gMainDisplaySize)
 gMainFont = pygame.font.Font('PrintChar21.ttf', 8)
