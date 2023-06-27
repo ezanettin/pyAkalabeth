@@ -507,7 +507,7 @@ def mainLoop():
             if sgnInout == 1:
                 apple.print("NORTH")
                 if TE[TX][TY - 1] == 1:
-                    apple.print("YOU CAN'T PASS THE MOUNTAINS")
+                    apple.print("YOU CAN'T PASS THE MOUNTAINS"); apple.beep()
                 else:
                     TY = TY - 1
             elif sgnInout == 2:
@@ -515,7 +515,9 @@ def mainLoop():
                     PX = PX + DX; PY = PY + DY
                 apple.print("FORWARD")
                 if DNG[PX][PY] == 2:
-                    apple.print("AAARRRGGGHHH!!! A TRAP!")
+                    apple.print("AAA", False); apple.beep(); apple.print("RRR", False); apple.beep()
+                    apple.print("GGG", False); apple.beep(); apple.print("HHH", False); apple.beep();
+                    apple.print("!!! A TRAP!", False); apple.beep();
                     C[0] = C[0] - int(random.random() * INOUT + 3)
                     MR = 1
                     INOUT = INOUT + 1
@@ -525,7 +527,7 @@ def mainLoop():
                     Z = 0
                     if DNG[PX][PY] == 5:
                         DNG[PX][PY] = 0
-                        apple.print("GOLD!!!!!")
+                        apple.print("GOLD!!!!!"); apple.beep(4)
                         Z =  int(random.random() * 5 * INOUT + INOUT)
                         apple.print(f"{Z}-PIECES OF EIGHT")
                         C[5] = C[5] + Z
@@ -542,7 +544,7 @@ def mainLoop():
             if sgnInout == 1:
                 apple.print("EAST")
                 if TE[TX + 1][TY] == 1:
-                    apple.print("YOU CAN'T PASS THE MOUNTAINS")
+                    apple.print("YOU CAN'T PASS THE MOUNTAINS"); apple.beep()
                 else:                
                     TX = TX + 1
             elif sgnInout == 2:
@@ -561,7 +563,7 @@ def mainLoop():
             if sgnInout == 1:
                 apple.print("WEST")
                 if TE[TX - 1][TY] == 1:
-                    apple.print("YOU CAN'T PASS THE MOUNTAINS")
+                    apple.print("YOU CAN'T PASS THE MOUNTAINS"); apple.beep()
                 else:
                     TX = TX - 1
             elif sgnInout == 2:
@@ -578,7 +580,7 @@ def mainLoop():
             if sgnInout == 1:
                 apple.print("SOUTH")
                 if TE[TX][TY + 1] == 1:
-                    apple.print("YOU CAN'T PASS THE MOUNTAINS")
+                    apple.print("YOU CAN'T PASS THE MOUNTAINS"); apple.beep()
                 else:
                     TY = TY + 1
             elif sgnInout == 2:
@@ -776,7 +778,7 @@ def playerAttack():
                     Q = int(apple.get())
                     apple.print(f"{Q}")
                 if random.random() > 0.75:
-                    apple.print("LAST CHARGE ON THIS AMULET!")
+                    apple.print("LAST CHARGE ON THIS AMULET!"); apple.beep()
                     PW[5] = PW[5] - 1
             if Q == 1:
                 apple.print("LADDER UP")
@@ -804,7 +806,7 @@ def playerAttack():
                     for Y in range(0, 5):
                         C[Y] = int(C[Y] * 2.5)
                 elif badChance == 3:
-                    apple.print("BACKFIRE")
+                    apple.print("BACKFIRE"); apple.beep(3)
                     C[0] = C[0] / 2
 
                 return
@@ -855,7 +857,7 @@ def playerAttack():
         apple.print("YOU MISSED")
     else:
 #  1663  PRINT "HIT!!! ":DAM  ( RND (1) * DAM + C(1) / 5):MZ%(MN,1) = MZ%(MN,1) - DAM
-        apple.print("HIT!!!")
+        apple.print("HIT!!!"); apple.beep(3)
         DAM = (random.random() * DAM + C[1] / 5)
         MZ[MN][1] = int(MZ[MN][1] - DAM)
 # 1664  PRINT M$(MN);"'S HIT POINTS=";MZ%(MN,1)
@@ -949,7 +951,7 @@ def monsterAttack(MM):
         if random.random() * 20 - apple.sgn(PW[3]) - C[3] + MM + INOUT < 0:
             apple.print("MISSED")
         else:
-            apple.print("HIT")
+            apple.print("HIT"); apple.beep(3)
             C[0] = C[0] -  int(random.random() * MM + INOUT)
 
     if PA == 1:
@@ -1170,7 +1172,7 @@ def castle():
             apple.print()
             apple.print("...CALL CALIFORNIA PACIFIC COMPUTER")
             apple.print("AT (415)-569-9126 TO REPORT THIS")
-            apple.print("AMAZING FEAT!")
+            apple.print("AMAZING FEAT!"); apple.beep(5)
 #  7990  GOTO 7070
 
 #  7070  PRINT : PRINT "         PRESS -SPACE- TO CONT.";: GET Q$: FOR X = 0 TO 5:C(X) = C(X) + 1: NEXT : HOME : GOTO 1090
