@@ -769,7 +769,7 @@ def playerAttack():
                 Q = int(random.random() * 4 + 1)
             else:
                 Q = 0
-                while Q >= 1 and Q <= 4:
+                while Q < 1 or Q > 4:
                     apple.print("1-LADDER-UP    2-LADDER-DN")
                     apple.print("3-KILL         4-BAD??")
                     apple.print("CHOICE ", False)
