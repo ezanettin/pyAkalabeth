@@ -13,6 +13,18 @@ class ApplesoftState:
         self.txtForeColour = "white"
         self.txtBackColour = "black"
 
+        self.cursorFlashCount = 0
+        self.cursorImg = pygame.Surface((7,8))
+        pygame.draw.rect(self.cursorImg, [0, 0, 0], [0, 0, 7, 8])
+        for i in range(1, 6, 2):
+            pygame.draw.line(self.cursorImg, self.txtForeColour, (i, 1), (i, 1))
+            pygame.draw.line(self.cursorImg, self.txtForeColour, (i, 3), (i, 3))
+            pygame.draw.line(self.cursorImg, self.txtForeColour, (i, 5), (i, 5))
+        pygame.draw.line(self.cursorImg, self.txtForeColour, (2, 2), (2, 2))
+        pygame.draw.line(self.cursorImg, self.txtForeColour, (4, 2), (4, 2))
+        pygame.draw.line(self.cursorImg, self.txtForeColour, (2, 4), (2, 4))
+        pygame.draw.line(self.cursorImg, self.txtForeColour, (4, 4), (4, 4))
+
         self.hgrColour = "black"
         self.hgrLastPoint = (0, 0)
 
@@ -153,6 +165,23 @@ def drawText(x, y, text):
     gAppleDisplaySurface.blit(image, rect)
 
 
+def flashCursor(x, y):
+    # According to https://retrocomputing.stackexchange.com/questions/13960/how-is-the-apple-ii-text-flash-mode-timed
+    #  cursor cycle is based on a NE555 time and is roughly is 2.1 seconds. Based on 30fps that's 63 frames. Let's call it 64 frames.
+    # After staring at the MicroM8 emulator cursor, it's on for ~9 frames and off for ~7, which is a total of 16 frames.
+    cursorOn = False
+    if env.cursorFlashCount < 9:        # on for 9 frames, off for 6
+        cursorOn = True
+
+    # Only draw the cursor if it's on. Don't draw it off (blank) so that the underlying text will show
+    if cursorOn:
+        img = env.cursorImg
+        rect = img.get_rect().move((x - 1) * 7, (y - 1) * 8)
+        gAppleDisplaySurface.blit(img, rect)
+
+    env.cursorFlashCount = (env.cursorFlashCount + 1) % 16      # we're using 16 as the duty cycle
+
+
 def print(text = None, newLine = True):
     if not text is None:
         drawText(env.x, env.y, text)
@@ -194,6 +223,7 @@ def input(promptText):
                     text += event.unicode
 
         drawText(env.x, env.y, f"{text} ")
+        flashCursor(env.x + len(text), env.y)
         render()
         clock.tick(30)
 
