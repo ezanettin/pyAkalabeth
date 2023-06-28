@@ -1242,7 +1242,7 @@ def init():
             apple.print(f"{Cs[X]}{C[X]} ")
         apple.print()
         apple.print("SHALT THOU PLAY WITH THESE QUALITIES?")
-        Qs = str.upper(apple.get())
+        apple.htab(20); Qs = str.upper(apple.get())
         if Qs == "Y":
             break
 
@@ -1252,7 +1252,7 @@ def init():
     global PTs
     while True:
         apple.vtab(15); apple.print(); apple.print("AND SHALT THOU BE A FIGHTER OR A MAGE?")
-        PTs = str.upper(apple.get())
+        apple.htab(20); PTs = str.upper(apple.get())
         if PTs == "M" or PTs == "F":
             break
 

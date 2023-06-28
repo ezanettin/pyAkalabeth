@@ -185,14 +185,18 @@ def flashCursor(x, y):
 def print(text = None, newLine = True):
     if not text is None:
         drawText(env.x, env.y, text)
+        env.x = env.x + len(text)
+        if env.x > 40:
+            env.x = env.x - 40
+            env.y = env.y + 1
+            if env.y > env.maxY:
+                scroll()
 
     if newLine:
         env.x = env.minX
         env.y = env.y + 1
         if env.y > env.maxY:
             scroll()
-    elif not text is None:
-        env.x = env.x + len(text)
 
     # handle weirdness where vtab is out of current text window
     if env.y > env.maxY:
@@ -223,7 +227,8 @@ def input(promptText):
                     text += event.unicode
 
         drawText(env.x, env.y, f"{text} ")
-        flashCursor(env.x + len(text), env.y)
+        if not done:
+            flashCursor(env.x + len(text), env.y)   # don't leave the cursor behind
         render()
         clock.tick(30)
 
@@ -235,19 +240,26 @@ def input(promptText):
 
 def get():
     clock = pygame.time.Clock()
+    done = False
+    keyCode = None
 
-    render()        
-
-    while True:
+    while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
             elif event.type == pygame.KEYDOWN:
                 if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_RCTRL, pygame.K_LCTRL, pygame.K_RALT, pygame.K_LALT, pygame.K_RSUPER, pygame.K_LSUPER]:
-                    return event.unicode
+                    done = True
+                    keyCode = event.unicode
 
+        drawText(env.x, env.y, " ")
+        if not done:
+            flashCursor(env.x, env.y)
+        render()
         clock.tick(30)
+    
+    return keyCode
 
 
 def getKeypress():
