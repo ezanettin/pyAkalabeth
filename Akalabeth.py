@@ -3,6 +3,153 @@ import random
 import math
 import ApplesoftBASIC as apple
 
+def start():
+    global INOUT; global PNs; global PA; global PX; global PY; global LK; global TASK;
+
+        # All variables in Apple BASIC begin at 0
+    INOUT = 0
+    PNs = ""
+    PA = 0
+    PX = 0; PY = 0
+    LK = 0
+    TASK = 0
+
+
+#  0  ONERR  GOTO 4
+#  1  REM 
+#  4  PR# 0: IN# 0
+#  5  HIMEM: 49151
+#  7  CLEAR : GOSUB 60000    
+    init()
+
+#  8 ZZ =  RND ( -  ABS (LN))
+#  9 LEVEL = 0
+    ZZ = random.seed(abs(LN))
+    LEVEL = 0
+
+#  10  TEXT : HOME : NORMAL : VTAB (12): PRINT " WELCOME TO AKALABETH, WORLD OF DOOM!"
+    apple.text() ; apple.home(); apple.vtab(12); apple.print(" WELCOME TO AKALABETH, WORLD OF DOOM!")
+
+#  20  DIM DN%(10,10),TE%(20,20),XX%(10),YY%(10),PER%(10,3),LD%(10,5),CD%(10,3),FT%(10,5),LAD%(10,3)
+    global DNG; global TE; global XX; global YY; global PER; global LD; global CD; global FT; global LAD
+    DNG = [[0] * 11 for i in range(0, 11)]
+    TE = [[0] * 21 for i in range(0, 21)]
+    XX = [ 0 ] * 11; YY = [ 0 ] * 11
+    PER = [[0] * 4 for i in range(0, 11)]
+    LD = [[0] * 6 for i in range(0, 11)]
+    CD = [[0] * 4 for i in range(0, 11)]
+    FT = [[0] * 6 for i in range(0, 11)]
+    LAD = [[0] * 4 for i in range(0, 11)]
+
+#  30  FOR X = 0 TO 20:TE%(X,0) = 1:TE%(0,X) = 1:TE%(X,20) = 1:TE%(20,X) = 1: NEXT 
+    for X in range(0, 21):
+        TE[X][0] = 1; TE[0][X] = 1; TE[X][20] = 1; TE[20][X] = 1
+
+#  35 : VTAB (23): PRINT "  (PLEASE WAIT)";
+    apple.vtab(23); apple.print("  (PLEASE WAIT)", False)
+    apple.render()
+
+#  40  FOR X = 1 TO 19: FOR Y = 1 TO 19:TE%(X,Y) =  INT ( RND (1) ^ 5 * 4.5)
+#  41  IF TE%(X,Y) = 3 AND  RND (1) > .5 THEN TE%(X,Y) = 0
+#  42  NEXT : PRINT ".";: NEXT 
+    for X in range(1, 20):
+        for Y in range(1, 20):
+            TE[X][Y] = int(random.random() ** 5 * 4.5)
+            if TE[X][Y] == 3 and random.random() > 0.5:
+                TE[X][Y] = 0
+
+        apple.print(".", False)
+    apple.render()
+    time.sleep(1)
+
+#  50 TE%( INT ( RND (1) * 19 + 1), INT ( RND (1) * 19 + 1)) = 5:TX =  INT ( RND (1) * 19 + 1):TY =  INT ( RND (1) * 19 + 1):TE%(TX,TY) = 3
+    TE[int(random.random() * 19 + 1)][int(random.random() * 19 + 1)] = 5
+
+    global TX; global TY
+    TX = int(random.random() * 19 + 1)
+    TY = int(random.random() * 19 + 1)
+    TE[TX][TY] = 3
+
+#  51 XX%(0) = 139:YY%(0) = 79
+    XX[0] = 139; YY[0] = 79
+
+#  52  FOR X = 2 TO 20 STEP 2:XX%(X / 2) =  INT ( ATN (1 / X) /  ATN (1) * 140 + .5):YY%(X / 2) =  INT (XX%(X / 2) * 4 / 7)
+#  53 PER%(X / 2,0) = 139 - XX%(X / 2):PER%(X / 2,1) = 139 + XX%(X / 2):PER%(X / 2,2) = 79 - YY%(X / 2):PER%(X / 2,3) = 79 + YY%(X / 2): NEXT 
+    for X in range(2, 21, 2):
+        XX[int(X/2)] = int(math.atan(1 / X) / math.atan(1) * 140 + 0.5)
+        YY[int(X/2)] = int(XX[int(X/2)] * 4 / 7)
+        PER[int(X / 2)][0] = 139 - XX[int(X / 2)]
+        PER[int(X / 2)][1] = 139 + XX[int(X / 2)]
+        PER[int(X / 2)][2] = 79 - YY[int(X / 2)]
+        PER[int(X / 2)][3] = 79 + YY[int(X / 2)]
+
+#  54 PER%(0,0) = 0:PER%(0,1) = 279:PER%(0,2) = 0:PE%(0,3) = 159
+    PER[0][0] = 0; PER[0][1] = 279; PER[0][2] = 0; PER[0][3] = 159
+
+#  55  FOR X = 1 TO 10:CD%(X,0) = 139 - XX%(X) / 3:CD%(X,1) = 139 + XX%(X) / 3:CD%(X,2) = 79 - YY%(X) * .7:CD%(X,3) = 79 + YY%(X): NEXT : PRINT ".";
+    for X in range(1, 11):
+        CD[X][0] = 139 - XX[X] / 3
+        CD[X][1] = 139 + XX[X] / 3
+        CD[X][2] = 79 - YY[X] * 0.7
+        CD[X][3] = 79 + YY[X]
+    apple.print(".", False)
+
+#  56  FOR X = 0 TO 9:LD%(X,0) = (PER%(X,0) * 2 + PER%(X + 1,0)) / 3:LD%(X,1) = (PER%(X,0) + 2 * PER%(X + 1,0)) / 3:W = LD%(X,0) - PE%(X,0)
+#  57 LD%(X,2) = PE%(X,2) + W * 4 / 7:LD%(X,3) = PER%(X,2) + 2 * W * 4 / 7:LD%(X,4) = (PE%(X,3) * 2 + PE%(X + 1,3)) / 3:LD%(X,5) = (PE%(X,3) + 2 * PE%(X + 1,3)) / 3
+#  58 LD%(X,2) = LD%(X,4) - (LD%(X,4) - LD%(X,2)) * .8:LD%(X,3) = LD%(X,5) - (LD%(X,5) - LD%(X,3)) * .8: IF LD%(X,3) = LD%(X,4) THEN LD%(X,3) = LD%(X,3) - 1
+#  59  NEXT 
+    for X in range (0, 10):
+        LD[X][0] = (PER[X][0] * 2 + PER[X + 1][0]) / 3
+        LD[X][1] = (PER[X][0] + 2 * PER[X + 1][0]) / 3
+        W = LD[X][0] - PER[X][0]
+        LD[X][2] = PER[X][2] + W * 4 / 7
+        LD[X][3] = PER[X][2] + 2 * W * 4 / 7
+        LD[X][4] = (PER[X][3] * 2 + PER[X + 1][3]) / 3
+        LD[X][5] = (PER[X][3] + 2 * PER[X + 1][3]) / 3
+        LD[X][2] = LD[X][4] - (LD[X][4] - LD[X][2]) * 0.8
+        LD[X][3] = LD[X][5] - (LD[X][5] - LD[X][3]) * 0.8
+        if LD[X][3] == LD[X][4]:
+            LD[X][3] = LD[X][3] - 1
+
+#  60  FOR X = 0 TO 9:FT%(X,0) = 139 - XX%(X) / 3:FT%(X,1) = 139 + XX%(X) / 3:FT%(X,2) = 139 - XX%(X + 1) / 3:FT%(X,3) = 139 + XX%(X + 1) / 3
+#  61 FT%(X,4) = 79 + (YY%(X) * 2 + YY%(X + 1)) / 3:FT%(X,5) = 79 + (YY%(X) + 2 * YY%(X + 1)) / 3: NEXT 
+    for X in range(0, 10):
+        FT[X][0] = 139 - XX[X] / 3
+        FT[X][1] = 139 + XX[X] / 3
+        FT[X][2] = 139 - XX[X + 1] / 3
+        FT[X][3] = 139 + XX[X + 1] / 3
+        FT[X][4] = 79 + (YY[X] * 2 + YY[X + 1]) / 3
+        FT[X][5] = 79 + (YY[X] + 2 * YY[X + 1]) / 3
+
+#  62  FOR X = 0 TO 9:LAD%(X,0) = (FT%(X,0) * 2 + FT%(X,1)) / 3:LAD%(X,1) = (FT%(X,0) + 2 * FT%(X,1)) / 3:LAD%(X,3) = FT%(X,4):LAD%(X,2) = 159 - LAD%(X,3): NEXT 
+    for X in range(0, 10):
+        LAD[X][0] = (FT[X][0] * 2 + FT[X][1]) / 3
+        LAD[X][1] = (FT[X][0] + 2 * FT[X][1]) / 3
+        LAD[X][3] = FT[X][4]
+        LAD[X][2] = 159 - LAD[X][3]
+
+    apple.render()
+    time.sleep(1)
+#  68  HOME : HCOLOR= 3
+    apple.home(); apple.hcolor(3)
+#  69  POKE 34,20: POKE 33,29: HOME 
+    apple.setTextWindowTop(20); apple.setTextWindowRight(29)
+
+#  70  GOSUB 100: GOTO 1000
+    drawMap()
+    mainLoop()
+
+#  90  FOR X = 0 TO 9: FOR Y = 0 TO 5: PRINT LD%(X,Y);" ";: NEXT : PRINT : NEXT : GET Q$
+# This looks like dead code
+    for X in range(0, 10):
+        for Y in range(0, 6):
+            apple.print(f"{LD[X][Y]} ")
+            xPos = xPos + 1
+            if (xPos > 40):
+                xPos = 1
+                yPos = yPos + 1
+    apple.get()
+
 
 def drawMap():
     global TX
@@ -689,7 +836,7 @@ def mainLoop():
             monsters()
         if C[0] <= 0:
             youHaveDied()
-            restartGame()
+            start()
 #  1096  POKE 33,40: VTAB (22): HTAB (30): PRINT "FOOD=";PW(0);: CALL  - 868: VTAB (23): HTAB (30): PRINT "H.P.=";C(0);: CALL  - 868: VTAB (24): HTAB (30): PRINT "GOLD=";C(5);: CALL  - 868: POKE 33,29: HTAB (1)
         apple.setTextWindowRight(40)
         apple.vtab(22); apple.htab(30); apple.print(f"FOOD={PW[0]}", False); apple.clearLineEnd()
@@ -1394,143 +1541,4 @@ if __name__ == '__main__':
 
     apple.init()
 
-    # All variables in Apple BASIC begin at 0
-    INOUT = 0
-    PNs = ""
-    PA = 0
-    PX = 0; PY = 0
-    LK = 0
-    TASK = 0
-
-
-    #  0  ONERR  GOTO 4
-    #  1  REM 
-    #  4  PR# 0: IN# 0
-    #  5  HIMEM: 49151
-    #  7  CLEAR : GOSUB 60000    
-    init()
-
-    #  8 ZZ =  RND ( -  ABS (LN))
-    #  9 LEVEL = 0
-    ZZ = random.seed(abs(LN))
-    LEVEL = 0
-
-    #  10  TEXT : HOME : NORMAL : VTAB (12): PRINT " WELCOME TO AKALABETH, WORLD OF DOOM!"
-    apple.text() ; apple.home(); apple.vtab(12); apple.print(" WELCOME TO AKALABETH, WORLD OF DOOM!")
-
-    #  20  DIM DN%(10,10),TE%(20,20),XX%(10),YY%(10),PER%(10,3),LD%(10,5),CD%(10,3),FT%(10,5),LAD%(10,3)
-    DNG = [[0] * 11 for i in range(0, 11)]
-    TE = [[0] * 21 for i in range(0, 21)]
-    XX = [ 0 ] * 11; YY = [ 0 ] * 11
-    PER = [[0] * 4 for i in range(0, 11)]
-    LD = [[0] * 6 for i in range(0, 11)]
-    CD = [[0] * 4 for i in range(0, 11)]
-    FT = [[0] * 6 for i in range(0, 11)]
-    LAD = [[0] * 4 for i in range(0, 11)]
-
-    #  30  FOR X = 0 TO 20:TE%(X,0) = 1:TE%(0,X) = 1:TE%(X,20) = 1:TE%(20,X) = 1: NEXT 
-    for X in range(0, 21):
-        TE[X][0] = 1; TE[0][X] = 1; TE[X][20] = 1; TE[20][X] = 1
-
-    #  35 : VTAB (23): PRINT "  (PLEASE WAIT)";
-    apple.vtab(23); apple.print("  (PLEASE WAIT)", False)
-    apple.render()
-
-    #  40  FOR X = 1 TO 19: FOR Y = 1 TO 19:TE%(X,Y) =  INT ( RND (1) ^ 5 * 4.5)
-    #  41  IF TE%(X,Y) = 3 AND  RND (1) > .5 THEN TE%(X,Y) = 0
-    #  42  NEXT : PRINT ".";: NEXT 
-    for X in range(1, 20):
-        for Y in range(1, 20):
-            TE[X][Y] = int(random.random() ** 5 * 4.5)
-            if TE[X][Y] == 3 and random.random() > 0.5:
-                TE[X][Y] = 0
-
-        apple.print(".", False)
-    apple.render()
-    time.sleep(1)
-
-    #  50 TE%( INT ( RND (1) * 19 + 1), INT ( RND (1) * 19 + 1)) = 5:TX =  INT ( RND (1) * 19 + 1):TY =  INT ( RND (1) * 19 + 1):TE%(TX,TY) = 3
-    TE[int(random.random() * 19 + 1)][int(random.random() * 19 + 1)] = 5
-    TX = int(random.random() * 19 + 1)
-    TY = int(random.random() * 19 + 1)
-    TE[TX][TY] = 3
-
-    #  51 XX%(0) = 139:YY%(0) = 79
-    XX[0] = 139; YY[0] = 79
-
-    #  52  FOR X = 2 TO 20 STEP 2:XX%(X / 2) =  INT ( ATN (1 / X) /  ATN (1) * 140 + .5):YY%(X / 2) =  INT (XX%(X / 2) * 4 / 7)
-    #  53 PER%(X / 2,0) = 139 - XX%(X / 2):PER%(X / 2,1) = 139 + XX%(X / 2):PER%(X / 2,2) = 79 - YY%(X / 2):PER%(X / 2,3) = 79 + YY%(X / 2): NEXT 
-    for X in range(2, 21, 2):
-        XX[int(X/2)] = int(math.atan(1 / X) / math.atan(1) * 140 + 0.5)
-        YY[int(X/2)] = int(XX[int(X/2)] * 4 / 7)
-        PER[int(X / 2)][0] = 139 - XX[int(X / 2)]
-        PER[int(X / 2)][1] = 139 + XX[int(X / 2)]
-        PER[int(X / 2)][2] = 79 - YY[int(X / 2)]
-        PER[int(X / 2)][3] = 79 + YY[int(X / 2)]
-
-    #  54 PER%(0,0) = 0:PER%(0,1) = 279:PER%(0,2) = 0:PE%(0,3) = 159
-    PER[0][0] = 0; PER[0][1] = 279; PER[0][2] = 0; PER[0][3] = 159
-
-    #  55  FOR X = 1 TO 10:CD%(X,0) = 139 - XX%(X) / 3:CD%(X,1) = 139 + XX%(X) / 3:CD%(X,2) = 79 - YY%(X) * .7:CD%(X,3) = 79 + YY%(X): NEXT : PRINT ".";
-    for X in range(1, 11):
-        CD[X][0] = 139 - XX[X] / 3
-        CD[X][1] = 139 + XX[X] / 3
-        CD[X][2] = 79 - YY[X] * 0.7
-        CD[X][3] = 79 + YY[X]
-    apple.print(".", False)
-
-    #  56  FOR X = 0 TO 9:LD%(X,0) = (PER%(X,0) * 2 + PER%(X + 1,0)) / 3:LD%(X,1) = (PER%(X,0) + 2 * PER%(X + 1,0)) / 3:W = LD%(X,0) - PE%(X,0)
-    #  57 LD%(X,2) = PE%(X,2) + W * 4 / 7:LD%(X,3) = PER%(X,2) + 2 * W * 4 / 7:LD%(X,4) = (PE%(X,3) * 2 + PE%(X + 1,3)) / 3:LD%(X,5) = (PE%(X,3) + 2 * PE%(X + 1,3)) / 3
-    #  58 LD%(X,2) = LD%(X,4) - (LD%(X,4) - LD%(X,2)) * .8:LD%(X,3) = LD%(X,5) - (LD%(X,5) - LD%(X,3)) * .8: IF LD%(X,3) = LD%(X,4) THEN LD%(X,3) = LD%(X,3) - 1
-    #  59  NEXT 
-    for X in range (0, 10):
-        LD[X][0] = (PER[X][0] * 2 + PER[X + 1][0]) / 3
-        LD[X][1] = (PER[X][0] + 2 * PER[X + 1][0]) / 3
-        W = LD[X][0] - PER[X][0]
-        LD[X][2] = PER[X][2] + W * 4 / 7
-        LD[X][3] = PER[X][2] + 2 * W * 4 / 7
-        LD[X][4] = (PER[X][3] * 2 + PER[X + 1][3]) / 3
-        LD[X][5] = (PER[X][3] + 2 * PER[X + 1][3]) / 3
-        LD[X][2] = LD[X][4] - (LD[X][4] - LD[X][2]) * 0.8
-        LD[X][3] = LD[X][5] - (LD[X][5] - LD[X][3]) * 0.8
-        if LD[X][3] == LD[X][4]:
-            LD[X][3] = LD[X][3] - 1
-
-    #  60  FOR X = 0 TO 9:FT%(X,0) = 139 - XX%(X) / 3:FT%(X,1) = 139 + XX%(X) / 3:FT%(X,2) = 139 - XX%(X + 1) / 3:FT%(X,3) = 139 + XX%(X + 1) / 3
-    #  61 FT%(X,4) = 79 + (YY%(X) * 2 + YY%(X + 1)) / 3:FT%(X,5) = 79 + (YY%(X) + 2 * YY%(X + 1)) / 3: NEXT 
-    for X in range(0, 10):
-        FT[X][0] = 139 - XX[X] / 3
-        FT[X][1] = 139 + XX[X] / 3
-        FT[X][2] = 139 - XX[X + 1] / 3
-        FT[X][3] = 139 + XX[X + 1] / 3
-        FT[X][4] = 79 + (YY[X] * 2 + YY[X + 1]) / 3
-        FT[X][5] = 79 + (YY[X] + 2 * YY[X + 1]) / 3
-
-    #  62  FOR X = 0 TO 9:LAD%(X,0) = (FT%(X,0) * 2 + FT%(X,1)) / 3:LAD%(X,1) = (FT%(X,0) + 2 * FT%(X,1)) / 3:LAD%(X,3) = FT%(X,4):LAD%(X,2) = 159 - LAD%(X,3): NEXT 
-    for X in range(0, 10):
-        LAD[X][0] = (FT[X][0] * 2 + FT[X][1]) / 3
-        LAD[X][1] = (FT[X][0] + 2 * FT[X][1]) / 3
-        LAD[X][3] = FT[X][4]
-        LAD[X][2] = 159 - LAD[X][3]
-
-    apple.render()
-    time.sleep(1)
-    #  68  HOME : HCOLOR= 3
-    apple.home(); apple.hcolor(3)
-    #  69  POKE 34,20: POKE 33,29: HOME 
-    apple.setTextWindowTop(20); apple.setTextWindowRight(29)
-
-    #  70  GOSUB 100: GOTO 1000
-    drawMap()
-    mainLoop()
-
-    #  90  FOR X = 0 TO 9: FOR Y = 0 TO 5: PRINT LD%(X,Y);" ";: NEXT : PRINT : NEXT : GET Q$
-    # This looks like dead code
-    for X in range(0, 10):
-        for Y in range(0, 6):
-            apple.print(f"{LD[X][Y]} ")
-            xPos = xPos + 1
-            if (xPos > 40):
-                xPos = 1
-                yPos = yPos + 1
-    apple.get()
+    start()

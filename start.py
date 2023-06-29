@@ -1,4 +1,5 @@
 import ApplesoftBASIC as apple
+import Akalabeth as akalabeth
 
 
 if __name__ == '__main__':
@@ -146,4 +147,6 @@ if __name__ == '__main__':
         apple.htab(8); apple.print("(PRESS SPACE TO CONTINUE)", False); apple.get()
 # 8997 PRINT
 # 8998 POKE 33,1: POKE 34,23
+
 # 8999 PRINT "RUN AKA1"
+    akalabeth.start()
