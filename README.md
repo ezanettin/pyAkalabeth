@@ -10,7 +10,9 @@ To run:
 _start.py_ to show the splash screen and instructions. Once the instructions are done the game will automatically launch.  
 _Akalabeth.py_ to skip the instructions and launch the game immediately.
 
-Useful stuff:  
+Notes:  
+AKALABETH.TXT is the original source of the game: https://github.com/videogamepreservation/akalabeth.  
+INSTRUCTIONS.TXT is the original source of the instructions.  
 The Apple II font file PrintChar21.tff: https://www.kreativekorp.com/software/fonts/apple2/.  
 MicroM8 Apple II emulator was useful for examining disk images and printing out code: https://paleotronic.com/software/microm8/.  
 jtauber's Apple disk image reader and BASIC detockenizer: https://github.com/jtauber/a2disk.  
