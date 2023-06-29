@@ -253,7 +253,7 @@ def drawGiantRat(C, B, DI):
     apple.hplot([(C + 5 / DI,B - 20 / DI), (C + 5 / DI,B - 15 / DI)])
     apple.hplot([(C - 7 / DI,B - 20 / DI), (C - 7 / DI,B - 15 / DI)])
     apple.hplot([(C + 7 / DI,B - 20 / DI), (C + 7 / DI,B - 15 / DI)])
-# 329  GOTO 490
+#  329  GOTO 490
 
 
 def drawOrc(C, B, DI):
@@ -515,9 +515,9 @@ def mainLoop():
                     PX = PX + DX; PY = PY + DY
                 apple.print("FORWARD")
                 if DNG[PX][PY] == 2:
-                    apple.print("AAA", False); apple.beep(); apple.print("RRR", False); apple.beep()
+                    apple.print("AA", False); apple.beep(); apple.print("ARRR", False); apple.beep()
                     apple.print("GGG", False); apple.beep(); apple.print("HHH", False); apple.beep();
-                    apple.print("!!! A TRAP!", False); apple.beep();
+                    apple.print("!!!", False); apple.beep(); apple.print(" A TRAP!")
                     C[0] = C[0] - int(random.random() * INOUT + 3)
                     MR = 1
                     INOUT = INOUT + 1
@@ -857,7 +857,7 @@ def playerAttack():
         apple.print("YOU MISSED")
     else:
 #  1663  PRINT "HIT!!! ":DAM  ( RND (1) * DAM + C(1) / 5):MZ%(MN,1) = MZ%(MN,1) - DAM
-        apple.print("HIT!!!"); apple.beep(3)
+        apple.print("HIT!!! "); apple.beep(3)
         DAM = (random.random() * DAM + C[1] / 5)
         MZ[MN][1] = int(MZ[MN][1] - DAM)
 # 1664  PRINT M$(MN);"'S HIT POINTS=";MZ%(MN,1)
