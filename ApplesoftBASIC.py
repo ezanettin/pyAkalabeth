@@ -50,7 +50,7 @@ def htab(x):
         x = 1
     elif x > 40:
         x = 40
-    env.x = x
+    env.txtX = x
 
 
 def vtab(y):
@@ -58,49 +58,49 @@ def vtab(y):
         y = 1
     elif y > 40:
         y = 24
-    env.y = y
+    env.txtY = y
 
 
 def setTextWindowTop(y):
     global gCursor
 
     y = y + 1           # user specifies line before they line the want in the window (ie, default if 0)
-    env.minY = y
-    if env.y < y:
-        env.y = y
+    env.txtMinY = y
+    if env.txtY < y:
+        env.txtY = y
 
 
 def setTextWindowBottom(y):
     global gCursor
 
-    env.maxY = y
-    if env.y > y:
-        env.y = y + 1     # ready to scroll
+    env.txtMaxY = y
+    if env.txtY > y:
+        env.txtY = y + 1     # ready to scroll
 
 
 def setTextWindowRight(x):
-    env.maxX = x
-    if env.x > x:
-        env.x = 1
+    env.txtMaxX = x
+    if env.txtX > x:
+        env.txtX = 1
 
 def text():
-    env.minX = 1
-    env.minY = 1
-    env.maxX = 40
-    env.maxY = 24
+    env.txtMinX = 1
+    env.txtMinY = 1
+    env.txtMaxX = 40
+    env.txtMaxY = 24
 
 
 def home():
-    x = (env.minX - 1) * 7
-    width = (env.maxX - env.minX + 1) * 7
-    y = (env.minY - 1) * 8
-    height = (env.maxY - env.minY + 1) * 8
+    x = (env.txtMinX - 1) * 7
+    width = (env.txtMaxX - env.txtMinX + 1) * 7
+    y = (env.txtMinY - 1) * 8
+    height = (env.txtMaxY - env.txtMinY + 1) * 8
 
     rect = pygame.Rect(x, y, width, height)
     pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], rect)
 
-    env.x = env.minX
-    env.y = env.minY
+    env.txtX = env.txtMinX
+    env.txtY = env.txtMinY
 
 
 def inverse():
@@ -116,7 +116,7 @@ def normal():
 def hgr():
     rect = pygame.Rect(0, 0, 280, 160)
     pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], rect)
-    env.minY = 21; env.maxY = 24
+    env.txtMinY = 21; env.txtMaxY = 24
 
 
 def hcolor(colour):
@@ -134,25 +134,25 @@ def hplotTo(points):
 
 
 def clearLineEnd():
-    x = (env.x - 1) * 7
-    width = (env.maxX - env.x + 1) * 7
-    y = (env.y - 1) * 8
+    x = (env.txtX - 1) * 7
+    width = (env.txtMaxX - env.txtX + 1) * 7
+    y = (env.txtY - 1) * 8
     height = 8
     rect = pygame.Rect(x, y, width, height)
     pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], rect)
 
 
 def scroll():
-    x = (env.minX - 1) * 7
-    width = (env.maxX - env.minX + 1) * 7
-    y = (env.minY - 1) * 8
-    height = (env.maxY - env.minY + 1) * 8
+    x = (env.txtMinX - 1) * 7
+    width = (env.txtMaxX - env.txtMinX + 1) * 7
+    y = (env.txtMinY - 1) * 8
+    height = (env.txtMaxY - env.txtMinY + 1) * 8
 
     clipRect = pygame.Rect(x, y, width, height)
     gAppleDisplaySurface.set_clip(clipRect)
     gAppleDisplaySurface.scroll(0, -8)
 
-    blankRect = pygame.Rect(x, (env.maxY - 1) * 8, width, 8)
+    blankRect = pygame.Rect(x, (env.txtMaxY - 1) * 8, width, 8)
     pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], blankRect)
 
     gAppleDisplaySurface.set_clip(gAppleDisplaySurface.get_rect())
@@ -184,25 +184,25 @@ def flashCursor(x, y):
 
 def print(text = None, newLine = True):
     if not text is None:
-        drawText(env.x, env.y, text)
-        env.x = env.x + len(text)
-        if env.x > 40:
-            env.x = env.x - 40
-            env.y = env.y + 1
-            if env.y > env.maxY:
+        drawText(env.txtX, env.txtY, text)
+        env.txtX = env.txtX + len(text)
+        if env.txtX > env.txtMaxX:
+            env.txtX = env.txtX - env.txtMaxX + env.txtMinX - 1
+            env.txtY = env.txtY + 1
+            if env.txtY > env.txtMaxY:
                 scroll()
 
     if newLine:
-        env.x = env.minX
-        env.y = env.y + 1
-        if env.y > env.maxY:
+        env.txtX = env.txtMinX
+        env.txtY = env.txtY + 1
+        if env.txtY > env.txtMaxY:
             scroll()
 
     # handle weirdness where vtab is out of current text window
-    if env.y > env.maxY:
-        env.y = env.maxY
-    elif env.y < env.minY:
-        env.y = env.minY
+    if env.txtY > env.txtMaxY:
+        env.txtY = env.txtMaxY
+    elif env.txtY < env.txtMinY:
+        env.txtY = env.txtMinY
 
 
 def input(promptText):
@@ -226,14 +226,14 @@ def input(promptText):
                 else:
                     text += event.unicode
 
-        drawText(env.x, env.y, f"{text} ")
+        drawText(env.txtX, env.txtY, f"{text} ")
         if not done:
-            flashCursor(env.x + len(text), env.y)   # don't leave the cursor behind
+            flashCursor(env.txtX + len(text), env.txtY)   # don't leave the cursor behind
         render()
         clock.tick(30)
 
-    env.x = 1
-    env.y = env.y + 1
+    env.txtX = 1
+    env.txtY = env.txtY + 1
 
     return text
 
@@ -253,9 +253,9 @@ def get():
                     done = True
                     keyCode = event.unicode
 
-        drawText(env.x, env.y, " ")
+        drawText(env.txtX, env.txtY, " ")
         if not done:
-            flashCursor(env.x, env.y)
+            flashCursor(env.txtX, env.txtY)
         render()
         clock.tick(30)
     
