@@ -1013,7 +1013,7 @@ def monsters():
                 continue
             ML[MM][0] = ML[MM][0] + X1
             ML[MM][1] = ML[MM][1] + Y1
-            DNG[ML[MM][0]][ML[MM][1]] = (DNG[ML[MM][0]][ML[MM][1]] + 10 * MM + .5)
+            DNG[ML[MM][0]][ML[MM][1]] = int(DNG[ML[MM][0]][ML[MM][1]] + 10 * MM + .5)
 #  4081  IF X1 <  > 0 OR Y1 <  > 0 THEN 4999
         if X1 != 0 or Y1 != 0:
             continue
