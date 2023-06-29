@@ -1231,8 +1231,7 @@ def castle():
 #  7020  PRINT : PRINT : PRINT "     WELCOME PEASANT INTO THE HALLS OF": PRINT "THE MIGHTY LORD BRITISH. HEREIN THOU MAYCHOOSE TO DARE BATTLE WITH THE EVIL": PRINT "CREATURES OF THE DEPTHS, FOR GREAT": PRINT "REWARD!"
         apple.print(); apple.print()
         apple.print("     WELCOME PEASANT INTO THE HALLS OF")
-        apple.print("THE MIGHTY LORD BRITISH. HEREIN THOU MAY")
-        apple.print("CHOOSE TO DARE BATTLE WITH THE EVIL")
+        apple.print("THE MIGHTY LORD BRITISH. HEREIN THOU MAYCHOOSE TO DARE BATTLE WITH THE EVIL")      # ApplesoftBASIC.print handles wrapping text
         apple.print("CREATURES OF THE DEPTHS, FOR GREAT")
         apple.print("REWARD!")
 

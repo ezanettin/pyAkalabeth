@@ -223,13 +223,20 @@ def flashCursor(x, y):
 
 def print(text = None, newLine = True):
     if not text is None:
+
+        # If the text is too long to fit in the current window, save the excess
+        moreText = text[(env.txtMaxX - env.txtX + 1):]
+
         drawText(env.txtX, env.txtY, text)
         env.txtX = env.txtX + len(text)
-        if env.txtX > env.txtMaxX:
-            env.txtX = env.txtX - env.txtMaxX + env.txtMinX - 1
+        if env.txtX > env.txtMaxX:      # text is too long for the text window, so move the cursor to the next line
+            env.txtX = env.txtMinX
             env.txtY = env.txtY + 1
             if env.txtY > env.txtMaxY:
                 scroll()
+            
+            if moreText:
+                print(moreText, False)  # ineligantly recurse to display the next line of text
 
     if newLine:
         env.txtX = env.txtMinX
