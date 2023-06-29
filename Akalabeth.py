@@ -819,7 +819,7 @@ def mainLoop():
 #  1090 PW(0) = PW(0) - 1 +  SGN (INOUT) * .9: IF PW(0) < 0 THEN C(0) = 0: PRINT : PRINT "YOU HAVE STARVED!!!!!": GOTO 1093
 # 1091  POKE 33,40: VTAB (22): HTAB (30): PRINT "FOOD=";PW(0);: CALL  - 868: VTAB (23): HTAB (30): PRINT "H.P.=";C(0);: CALL  - 868: VTAB (24): HTAB (30): PRINT "GOLD=";C(5);: CALL  - 868: POKE 33,29: HTAB (1)
 # 1092 PW(0) =  INT (PW(0) * 10) / 10
-        PW[0] = PW[0] - 1 + apple.sgn(INOUT) * 0.9
+        PW[0] = round(PW[0] - 1 + apple.sgn(INOUT) * 0.9, 1)    # round() to avoid insignificant inaccuracies
         if PW[0] < 0:
             C[0] = 0
             apple.print(); apple.print("YOU HAVE STARVED!!!!!")
