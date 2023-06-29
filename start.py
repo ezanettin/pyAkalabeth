@@ -3,6 +3,8 @@ import ApplesoftBASIC as apple
 
 if __name__ == '__main__':
 
+    apple.init()
+
 # 1 TEXT:HOME:NORMAL:VTAB( 5): HTAB (9): PRINT "WELCOME,  FOOLISH MORTAL": VTAB (7): HTAB (14): PRINT "INTO THE WORLD": VTAB (9): HTAB (16) : INVERSE : PRINT "AKALABETH!": NORMAL
     apple.text(); apple.home()
     apple.vtab(5); apple.htab(9); apple.print("WELCOME,  FOOLISH MORTAL")

@@ -1392,6 +1392,8 @@ def town():
 
 if __name__ == '__main__':
 
+    apple.init()
+
     # All variables in Apple BASIC begin at 0
     INOUT = 0
     PNs = ""

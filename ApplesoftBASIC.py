@@ -1,9 +1,10 @@
 import time
 import pygame
+import sys
 
 
 class ApplesoftState:
-    def __init__(self):
+    def __init__(self, displayWidth, displayHeight):
         self.txtX = 1
         self.txtY = 1
         self.txtMinX = 1
@@ -17,22 +18,60 @@ class ApplesoftState:
         self.cursorImg = pygame.Surface((7,8))
         pygame.draw.rect(self.cursorImg, [0, 0, 0], [0, 0, 7, 8])
         for i in range(1, 6, 2):
-            pygame.draw.line(self.cursorImg, self.txtForeColour, (i, 1), (i, 1))
-            pygame.draw.line(self.cursorImg, self.txtForeColour, (i, 3), (i, 3))
-            pygame.draw.line(self.cursorImg, self.txtForeColour, (i, 5), (i, 5))
-        pygame.draw.line(self.cursorImg, self.txtForeColour, (2, 2), (2, 2))
-        pygame.draw.line(self.cursorImg, self.txtForeColour, (4, 2), (4, 2))
-        pygame.draw.line(self.cursorImg, self.txtForeColour, (2, 4), (2, 4))
-        pygame.draw.line(self.cursorImg, self.txtForeColour, (4, 4), (4, 4))
+            self.cursorImg.set_at((i, 1), self.txtForeColour)
+            self.cursorImg.set_at((i, 3), self.txtForeColour)
+            self.cursorImg.set_at((i, 5), self.txtForeColour)
+        self.cursorImg.set_at((2, 2), self.txtForeColour)
+        self.cursorImg.set_at((4, 2), self.txtForeColour)
+        self.cursorImg.set_at((2, 4), self.txtForeColour)
+        self.cursorImg.set_at((4, 4), self.txtForeColour)
 
         self.hgrColour = "black"
         self.hgrLastPoint = (0, 0)
 
-        self.beepSound = pygame.mixer.Sound("Apple2Beep.wav")
+        self.soundBeep = pygame.mixer.Sound("Apple2Beep.wav")
+
+        # create the display surface object of specific dimension..e(X, Y).
+        sys.stdout.write("Creating window {x},{y}\n".format(x=displayWidth, y=displayHeight))
+        self.appleDisplaySurface = pygame.Surface((280,192))
+        self.renderDisplaySurface = pygame.display.set_mode((displayWidth, displayHeight))
+        self.txtFont = pygame.font.Font('PrintChar21.ttf', 8)
+
+
+
+def init(displayWidth = 0, displayHeight = 0):
+    pygame.init()
+    pygame.mixer.init()
+
+    if displayWidth == 0 or displayHeight == 0:
+        xRatio = int(pygame.display.Info().current_w / 280)
+        yRatio = int((pygame.display.Info().current_h - 30) / 192)      # factor in title bar height
+        if xRatio == 0 or yRatio == 0:
+            displayWidth = 280
+            displayHeight = 192
+        else:
+            displayWidth = 280 * min(xRatio, yRatio)
+            displayHeight = 192 * min(xRatio, yRatio)
+
+    global env
+    env = ApplesoftState(displayWidth, displayHeight)
+
+    global keyCodes
+    keyCodes = { pygame.K_LEFT: 136,
+                pygame.K_RETURN: 141,
+                pygame.K_RIGHT: 149,
+                pygame.K_ESCAPE: 155,
+                pygame.K_SPACE: 160,
+                pygame.K_SLASH: 175,
+                pygame.K_a: 193,
+                pygame.K_p: 208,
+                pygame.K_s: 211,
+                pygame.K_x: 216,
+                }
 
 
 def render():
-    pygame.transform.scale(gAppleDisplaySurface, gMainDisplaySize, gMainDisplaySurface)
+    pygame.transform.scale(env.appleDisplaySurface, env.renderDisplaySurface.get_size(), env.renderDisplaySurface)
     pygame.display.update()
   
 
@@ -97,7 +136,7 @@ def home():
     height = (env.txtMaxY - env.txtMinY + 1) * 8
 
     rect = pygame.Rect(x, y, width, height)
-    pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], rect)
+    pygame.draw.rect(env.appleDisplaySurface, [0, 0, 0], rect)
 
     env.txtX = env.txtMinX
     env.txtY = env.txtMinY
@@ -115,7 +154,7 @@ def normal():
 
 def hgr():
     rect = pygame.Rect(0, 0, 280, 160)
-    pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], rect)
+    pygame.draw.rect(env.appleDisplaySurface, [0, 0, 0], rect)
     env.txtMinY = 21; env.txtMaxY = 24
 
 
@@ -125,7 +164,7 @@ def hcolor(colour):
 
 
 def hplot(points):
-    pygame.draw.lines(gAppleDisplaySurface, env.hgrColour, False, points)
+    pygame.draw.lines(env.appleDisplaySurface, env.hgrColour, False, points)
     env.hgrLastPoint = points[-1]
 
 
@@ -139,7 +178,7 @@ def clearLineEnd():
     y = (env.txtY - 1) * 8
     height = 8
     rect = pygame.Rect(x, y, width, height)
-    pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], rect)
+    pygame.draw.rect(env.appleDisplaySurface, [0, 0, 0], rect)
 
 
 def scroll():
@@ -149,20 +188,20 @@ def scroll():
     height = (env.txtMaxY - env.txtMinY + 1) * 8
 
     clipRect = pygame.Rect(x, y, width, height)
-    gAppleDisplaySurface.set_clip(clipRect)
-    gAppleDisplaySurface.scroll(0, -8)
+    env.appleDisplaySurface.set_clip(clipRect)
+    env.appleDisplaySurface.scroll(0, -8)
 
     blankRect = pygame.Rect(x, (env.txtMaxY - 1) * 8, width, 8)
-    pygame.draw.rect(gAppleDisplaySurface, [0, 0, 0], blankRect)
+    pygame.draw.rect(env.appleDisplaySurface, [0, 0, 0], blankRect)
 
-    gAppleDisplaySurface.set_clip(gAppleDisplaySurface.get_rect())
+    env.appleDisplaySurface.set_clip(env.appleDisplaySurface.get_rect())
 
 
 def drawText(x, y, text):
-    image = gMainFont.render(text, True, env.txtForeColour, env.txtBackColour)
+    image = env.txtFont.render(text, True, env.txtForeColour, env.txtBackColour)
     rect = image.get_rect()
     rect.topleft = [(x - 1) * 7, (y - 1) * 8]
-    gAppleDisplaySurface.blit(image, rect)
+    env.appleDisplaySurface.blit(image, rect)
 
 
 def flashCursor(x, y):
@@ -177,7 +216,7 @@ def flashCursor(x, y):
     if cursorOn:
         img = env.cursorImg
         rect = img.get_rect().move((x - 1) * 7, (y - 1) * 8)
-        gAppleDisplaySurface.blit(img, rect)
+        env.appleDisplaySurface.blit(img, rect)
 
     env.cursorFlashCount = (env.cursorFlashCount + 1) % 16      # we're using 16 as the duty cycle
 
@@ -274,8 +313,8 @@ def getKeypress():
                 quit()
             elif event.type == pygame.KEYDOWN:
                 if event.key not in [pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_RCTRL, pygame.K_LCTRL, pygame.K_RALT, pygame.K_LALT, pygame.K_RSUPER, pygame.K_LSUPER]:
-                    if event.key in gKeyCodes:
-                        return gKeyCodes[event.key]
+                    if event.key in keyCodes:
+                        return keyCodes[event.key]
                     else:
                         return event.key
 
@@ -284,33 +323,6 @@ def getKeypress():
 
 def beep(count = 1):
     while count > 0:
-        env.beepSound.play()
+        env.soundBeep.play()
         count = count - 1
         time.sleep(0.1)
-
-
-
-
-
-pygame.init()
-pygame.mixer.init()
-
-env = ApplesoftState()
-gMainDisplaySize = (560, 384)
-gKeyCodes = { pygame.K_LEFT: 136,
-              pygame.K_RETURN: 141,
-              pygame.K_RIGHT: 149,
-              pygame.K_ESCAPE: 155,
-              pygame.K_SPACE: 160,
-              pygame.K_SLASH: 175,
-              pygame.K_a: 193,
-              pygame.K_p: 208,
-              pygame.K_s: 211,
-              pygame.K_x: 216,
-            }
-  
-# create the display surface object of specific dimension..e(X, Y).
-gAppleDisplaySurface = pygame.Surface((280,192))
-gMainDisplaySurface = pygame.display.set_mode(gMainDisplaySize)
-gMainFont = pygame.font.Font('PrintChar21.ttf', 8)
-
